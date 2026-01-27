@@ -20,11 +20,19 @@ class Patient(BaseModel):
             raise ValueError("Not a valid domain")
         return value 
 
-    @field_validator('name')
+    @field_validator('name', mode='after')
     @classmethod
     def transform_name(cls, value): 
         return value.upper()
-
+    
+    @field_validator('age', mode='before')
+    @classmethod
+    def validate_age(cls, value): 
+        if 0 < value < 100: 
+            return value 
+        else: 
+            raise ValueError("Age should be in between 0 and 100")
+         
 def update_patient_data(patient: Patient): 
     
     print(patient.name)
@@ -38,4 +46,4 @@ patient_info = {'name':'nitish','email':'abc@gmail.com','age':'30','weight':72.4
 
 patient1 = Patient(**patient_info)
 
-update_patient_data(patient1) 
+update_patient_data(patient1)           
